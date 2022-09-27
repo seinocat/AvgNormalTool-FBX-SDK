@@ -247,16 +247,14 @@ class FBX_Class(object):
             for i in range(node.GetChildCount()):
                 mesh = node.GetChild(i).GetMesh()
                 if mesh is not None :
-                    layer:FbxLayer = mesh.GetLayer(0)
-                    vertexColor:FbxLayerElementVertexColor = FbxLayerElementVertexColor.Create(mesh, "")
+                    layer = mesh.GetLayer(0)
+                    vertexColor = FbxLayerElementVertexColor.Create(mesh, "")
                     vertexColor.SetMappingMode(FbxLayerElement.eByPolygonVertex)
                     vertexColor.SetReferenceMode(FbxLayerElement.eIndexToDirect)
-                    vertexColorArray:FbxLayerElementArrayTemplate_FbxColor = vertexColor.GetDirectArray()
-                    vertexIndexArray:FbxLayerElementArrayTemplate_int = vertexColor.GetIndexArray()
+                    vertexColorArray = vertexColor.GetDirectArray()
+                    vertexIndexArray = vertexColor.GetIndexArray()
                     for j in range(mesh.GetPolygonVertexCount()):
                         vertexColorArray.Add(FbxColor(1, 1, 1, 1))
                         vertexIndexArray.Add(j)
-
                     layer.SetVertexColors(vertexColor)
-
                 self.AddVertColor(node.GetChild(i))
