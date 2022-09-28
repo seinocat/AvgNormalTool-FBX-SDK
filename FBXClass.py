@@ -157,7 +157,7 @@ class FBX_Class(object):
         self.close()
 
     def AvgMeshNormal(self):
-        print("开始处理....")
+        print("Start AvgNormal....")
         time_start = time.time()
         geo: FbxGeometry = self.scene.GetGeometry(0)
         if geo is not None and geo.GetAttributeType() == fbx.FbxNodeAttribute.eMesh:
@@ -192,7 +192,7 @@ class FBX_Class(object):
 
                 # 先取到所有控制点的法线
                 for j in range(polygonVetexCount):
-                    print("正在读取", j, "/", polygonVetexCount)
+                    # print("正在读取", j, "/", polygonVetexCount)
                     rCurVertexIndex = polygonVertices[j]
                     rNormal: FbxVector4 = vertNormalArray[j]
                     if rCurVertexIndex not in vertCtrlPoint:
@@ -210,7 +210,7 @@ class FBX_Class(object):
                     vertAvgNormal[key] = weightNormal
 
                 for m in range(polygonVetexCount):
-                    print("正在写入", m, "/", polygonVetexCount)
+                    # print("正在写入", m, "/", polygonVetexCount)
                     # 获取对应的顶点索引，顶点色索引，平均法线
                     vertexIndex = polygonVertices[m]
                     vertColorIndex = vertColorIndexArray[m]
@@ -238,8 +238,10 @@ class FBX_Class(object):
                     # 写入顶点色
                     vertColorArray.SetAt(vertColorIndex, color)
 
+                print(node.GetName())
+
         time_end = time.time()
-        print("处理完成，耗时:", time_end - time_start, "s")
+        print("Done，Elapsed time:", time_end - time_start, "s")
 
 
     def AddVertColor(self, node:FbxNode):

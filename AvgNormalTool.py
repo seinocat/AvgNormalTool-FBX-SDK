@@ -1,7 +1,8 @@
 import FBXClass
 
-fbxFile = FBXClass.FBX_Class(r"E:\Client\GrapicsLab\Clients\URPWater\URPWater\Assets\Prefab\nmxss.fbx")
-# 添加顶点色通道
+# replace it with your fbx path
+fbxFile = FBXClass.FBX_Class(r"xxxx\Model\nmxs.fbx")
+# add vertex color
 #fbxFile.AddVertColor(fbxFile.scene.GetRootNode())
 fbxFile.AvgMeshNormal()
 fbxFile.save()
