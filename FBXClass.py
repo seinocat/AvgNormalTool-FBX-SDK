@@ -157,8 +157,6 @@ class FBX_Class(object):
         self.close()
 
     def AvgMeshNormal(self):
-        print("Start AvgNormal....")
-        time_start = time.time()
 
         geoCount = self.scene.GetGeometryCount()
         for geoIndex in range(geoCount):
@@ -248,8 +246,7 @@ class FBX_Class(object):
                         # 写入顶点色
                         vertColorArray.SetAt(vertColorIndex, color)
 
-        time_end = time.time()
-        print("Done，Elapsed time:", time_end - time_start, "s")
+
 
 
     def AddVertColor(self, node):
