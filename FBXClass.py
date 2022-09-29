@@ -159,92 +159,101 @@ class FBX_Class(object):
     def AvgMeshNormal(self):
         print("Start AvgNormal....")
         time_start = time.time()
-        geo: FbxGeometry = self.scene.GetGeometry(0)
-        if geo is not None and geo.GetAttributeType() == fbx.FbxNodeAttribute.eMesh:
-            nodeCount = geo.GetNodeCount()
-            for i in range(nodeCount):
-                # 获取节点
-                node = geo.GetNode(i)
-                # 获取mesh
-                mesh = node.GetMesh()
-                # 获取Layer0
-                layer = mesh.GetLayer(0)
 
-                # 获取法线，切线，副切线，顶点色
-                vertNormals = layer.GetNormals()
-                vertTangents = layer.GetTangents()
-                vertBinormals = layer.GetBinormals()
-                vertColor = layer.GetVertexColors()
+        geoCount = self.scene.GetGeometryCount()
+        for geoIndex in range(geoCount):
+            geo: FbxGeometry = self.scene.GetGeometry(geoIndex)
+            if geo is not None and geo.GetAttributeType() == fbx.FbxNodeAttribute.eMesh:
+                nodeCount = geo.GetNodeCount()
+                for i in range(nodeCount):
+                    # 获取节点
+                    node = geo.GetNode(i)
+                    # 获取mesh
+                    mesh = node.GetMesh()
+                    # 获取Layer0
+                    layer = mesh.GetLayer(0)
 
-                # 优化点，缓存数据，减少调用GetXXX()产生的开销
-                polygonVetexCount = mesh.GetPolygonVertexCount()
-                polygonVertices = mesh.GetPolygonVertices()
-                vertNormalArray = vertNormals.GetDirectArray()
-                vertTangentArray = vertTangents.GetDirectArray()
-                vertBinormalArray = vertBinormals.GetDirectArray()
-                vertColorArray = vertColor.GetDirectArray()
-                vertColorIndexArray = vertColor.GetIndexArray()
+                    # 获取法线，切线，副切线，顶点色
+                    vertNormals = layer.GetNormals()
+                    vertTangents = layer.GetTangents()
+                    vertBinormals = layer.GetBinormals()
+                    vertColor = layer.GetVertexColors()
 
-                # 控制顶点字典        <int, List<FbxVector4>>  <顶点索引，法线列表>
-                vertCtrlPoint = {}
-                # 控制顶点平均法线字典  <int, FbxVector4>        <顶点索引, 平均法线>
-                vertAvgNormal = {}
+                    if vertTangents is None:
+                        print("Error, Tangents is None")
+                    if vertBinormals is None:
+                        print("Error, Binormals is None")
+                    if vertColor is None:
+                        print("Error, VertColor is None")
 
-                # 先取到所有控制点的法线
-                for j in range(polygonVetexCount):
-                    # print("正在读取", j, "/", polygonVetexCount)
-                    rCurVertexIndex = polygonVertices[j]
-                    rNormal: FbxVector4 = vertNormalArray[j]
-                    if rCurVertexIndex not in vertCtrlPoint:
-                        normals = [rNormal]
-                        vertCtrlPoint[rCurVertexIndex] = normals
-                    else:
-                        if rNormal not in vertCtrlPoint[rCurVertexIndex]:
-                            vertCtrlPoint[rCurVertexIndex].append(rNormal)
-                # 平均法线值
-                for key, value in vertCtrlPoint.items():
-                    weightNormal = FbxVector4(0, 0, 0, 0)
-                    for k in range(len(value)):
-                        weightNormal += value[k]
-                    weightNormal.Normalize()
-                    vertAvgNormal[key] = weightNormal
+                    # 优化点，缓存数据，减少调用GetXXX()产生的开销
+                    polygonVetexCount = mesh.GetPolygonVertexCount()
+                    polygonVertices = mesh.GetPolygonVertices()
+                    vertNormalArray = vertNormals.GetDirectArray()
+                    vertTangentArray = vertTangents.GetDirectArray()
+                    vertBinormalArray = vertBinormals.GetDirectArray()
+                    vertColorArray = vertColor.GetDirectArray()
+                    vertColorIndexArray = vertColor.GetIndexArray()
 
-                for m in range(polygonVetexCount):
-                    # print("正在写入", m, "/", polygonVetexCount)
-                    # 获取对应的顶点索引，顶点色索引，平均法线
-                    vertexIndex = polygonVertices[m]
-                    vertColorIndex = vertColorIndexArray[m]
-                    smoothNormal: FbxVector4 = vertAvgNormal[vertexIndex]
+                    # 控制顶点字典        <int, List<FbxVector4>>  <顶点索引，法线列表>
+                    vertCtrlPoint = {}
+                    # 控制顶点平均法线字典  <int, FbxVector4>        <顶点索引, 平均法线>
+                    vertAvgNormal = {}
 
-                    # 构建TBN，转换到切线空间下
-                    normal = vertNormalArray[m]
-                    tangent = vertTangentArray[m]
-                    binormal = vertBinormalArray[m]
-                    tempVector = FbxVector4(tangent.DotProduct(smoothNormal),
-                                            binormal.DotProduct(smoothNormal),
-                                            normal.DotProduct(smoothNormal),
-                                            0)
+                    # 先取到所有控制点的法线
+                    for j in range(polygonVetexCount):
+                        # print("正在读取", j, "/", polygonVetexCount)
+                        rCurVertexIndex = polygonVertices[j]
+                        rNormal: FbxVector4 = vertNormalArray[j]
+                        if rCurVertexIndex not in vertCtrlPoint:
+                            normals = [rNormal]
+                            vertCtrlPoint[rCurVertexIndex] = normals
+                        else:
+                            if rNormal not in vertCtrlPoint[rCurVertexIndex]:
+                                vertCtrlPoint[rCurVertexIndex].append(rNormal)
+                    # 平均法线值
+                    for key, value in vertCtrlPoint.items():
+                        weightNormal = FbxVector4(0, 0, 0, 0)
+                        for k in range(len(value)):
+                            weightNormal += value[k]
+                        weightNormal.Normalize()
+                        vertAvgNormal[key] = weightNormal
 
-                    smoothNormal = tempVector
-                    smoothNormal.Normalize()
+                    for m in range(polygonVetexCount):
+                        print("正在写入", m, "/", polygonVetexCount)
+                        # 获取对应的顶点索引，顶点色索引，平均法线
+                        vertexIndex = polygonVertices[m]
+                        vertColorIndex = vertColorIndexArray[m]
+                        smoothNormal: FbxVector4 = vertAvgNormal[vertexIndex]
 
-                    # 映射到顶点色中
-                    color = FbxColor()
-                    color.mRed = smoothNormal[0] * 0.5 + 0.5
-                    color.mGreen = smoothNormal[1] * 0.5 + 0.5
-                    color.mBlue = smoothNormal[2] * 0.5 + 0.5
-                    color.mAlpha = vertColorArray[vertColorIndex].mAlpha
+                        # 构建TBN，转换到切线空间下
+                        normal = vertNormalArray[m]
+                        tangent = vertTangentArray[m]
+                        binormal = vertBinormalArray[m]
+                        tempVector = FbxVector4(tangent.DotProduct(smoothNormal),
+                                                binormal.DotProduct(smoothNormal),
+                                                normal.DotProduct(smoothNormal),
+                                                0)
 
-                    # 写入顶点色
-                    vertColorArray.SetAt(vertColorIndex, color)
+                        smoothNormal = tempVector
+                        smoothNormal.Normalize()
 
-                print(node.GetName())
+                        # 映射到顶点色中
+                        color = FbxColor()
+                        color.mRed = smoothNormal[0] * 0.5 + 0.5
+                        color.mGreen = smoothNormal[1] * 0.5 + 0.5
+                        color.mBlue = smoothNormal[2] * 0.5 + 0.5
+                        color.mAlpha = vertColorArray[vertColorIndex].mAlpha
+
+                        # 写入顶点色
+                        vertColorArray.SetAt(vertColorIndex, color)
 
         time_end = time.time()
         print("Done，Elapsed time:", time_end - time_start, "s")
 
 
     def AddVertColor(self, node:FbxNode):
+        print("开始添加顶点色通道")
         if node.GetChildCount() > 0:
             for i in range(node.GetChildCount()):
                 mesh = node.GetChild(i).GetMesh()
