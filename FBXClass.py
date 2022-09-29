@@ -162,7 +162,7 @@ class FBX_Class(object):
 
         geoCount = self.scene.GetGeometryCount()
         for geoIndex in range(geoCount):
-            geo: FbxGeometry = self.scene.GetGeometry(geoIndex)
+            geo = self.scene.GetGeometry(geoIndex)
             if geo is not None and geo.GetAttributeType() == fbx.FbxNodeAttribute.eMesh:
                 nodeCount = geo.GetNodeCount()
                 for i in range(nodeCount):
@@ -204,7 +204,7 @@ class FBX_Class(object):
                     for j in range(polygonVertexCount):
                         # print("正在读取", j, "/", polygonVertexCount)
                         rCurVertexIndex = polygonVertices[j]
-                        rNormal: FbxVector4 = vertNormalArray[j]
+                        rNormal = vertNormalArray[j]
                         if rCurVertexIndex not in vertCtrlPoint:
                             normals = [rNormal]
                             vertCtrlPoint[rCurVertexIndex] = normals
@@ -213,11 +213,11 @@ class FBX_Class(object):
                                 vertCtrlPoint[rCurVertexIndex].append(rNormal)
                     # 平均法线值
                     for key, value in vertCtrlPoint.items():
-                        weightNormal = FbxVector4(0, 0, 0, 0)
+                        tempNormal = FbxVector4(0, 0, 0, 0)
                         for k in range(len(value)):
-                            weightNormal += value[k]
-                        weightNormal.Normalize()
-                        vertAvgNormal[key] = weightNormal
+                            tempNormal += value[k]
+                            tempNormal.Normalize()
+                        vertAvgNormal[key] = tempNormal
 
                     for m in range(polygonVertexCount):
                         #print("正在写入", m, "/", polygonVertexCount)
@@ -252,7 +252,7 @@ class FBX_Class(object):
         print("Done，Elapsed time:", time_end - time_start, "s")
 
 
-    def AddVertColor(self, node:FbxNode):
+    def AddVertColor(self, node):
         #print("开始添加顶点色通道")
         if node.GetChildCount() > 0:
             for i in range(node.GetChildCount()):
