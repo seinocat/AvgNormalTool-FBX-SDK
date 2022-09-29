@@ -187,7 +187,7 @@ class FBX_Class(object):
                         print("Error, VertColor is None")
 
                     # 优化点，缓存数据，减少调用GetXXX()产生的开销
-                    polygonVetexCount = mesh.GetPolygonVertexCount()
+                    polygonVertexCount = mesh.GetPolygonVertexCount()
                     polygonVertices = mesh.GetPolygonVertices()
                     vertNormalArray = vertNormals.GetDirectArray()
                     vertTangentArray = vertTangents.GetDirectArray()
@@ -201,8 +201,8 @@ class FBX_Class(object):
                     vertAvgNormal = {}
 
                     # 先取到所有控制点的法线
-                    for j in range(polygonVetexCount):
-                        # print("正在读取", j, "/", polygonVetexCount)
+                    for j in range(polygonVertexCount):
+                        # print("正在读取", j, "/", polygonVertexCount)
                         rCurVertexIndex = polygonVertices[j]
                         rNormal: FbxVector4 = vertNormalArray[j]
                         if rCurVertexIndex not in vertCtrlPoint:
@@ -219,8 +219,8 @@ class FBX_Class(object):
                         weightNormal.Normalize()
                         vertAvgNormal[key] = weightNormal
 
-                    for m in range(polygonVetexCount):
-                        print("正在写入", m, "/", polygonVetexCount)
+                    for m in range(polygonVertexCount):
+                        #print("正在写入", m, "/", polygonVertexCount)
                         # 获取对应的顶点索引，顶点色索引，平均法线
                         vertexIndex = polygonVertices[m]
                         vertColorIndex = vertColorIndexArray[m]
@@ -253,13 +253,19 @@ class FBX_Class(object):
 
 
     def AddVertColor(self, node:FbxNode):
-        print("开始添加顶点色通道")
+        #print("开始添加顶点色通道")
         if node.GetChildCount() > 0:
             for i in range(node.GetChildCount()):
                 mesh = node.GetChild(i).GetMesh()
                 if mesh is not None :
                     layer = mesh.GetLayer(0)
-                    vertexColor = FbxLayerElementVertexColor.Create(mesh, "")
+
+                    # 模型自带顶点色就不处理
+                    getVertexColor = layer.GetVertexColors()
+                    if getVertexColor is not None:
+                        continue
+
+                    vertexColor = FbxLayerElementVertexColor.Create(mesh, "vert color")
                     vertexColor.SetMappingMode(FbxLayerElement.eByPolygonVertex)
                     vertexColor.SetReferenceMode(FbxLayerElement.eIndexToDirect)
                     vertexColorArray = vertexColor.GetDirectArray()
