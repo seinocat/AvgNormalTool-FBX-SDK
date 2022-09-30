@@ -1,4 +1,21 @@
-# AvgNormal-Tool-FBX-SDK
-法线平滑工具，FBX SDK, Python
+# AvgNormalTool-FBX-SDK
+Smooth Normal Tool，FBX SDK, Python，C++
 
-FBX SDK目录下是Python3.7的库
+C++：
+
+c++/dll 目录下是编译好的dll文件，可以直接放到对应的dcc安装目录下
+
+Maya:<maya_install_path>/bin/plug-ins/fbx \n
+
+Max:<3dsMax_install_path>/stdplugs/fbx
+
+MotionBuilder:
+
+32-bit version of MotionBuilder: <motionbuilder_path>/bin/win32/plugins/fbx
+
+64-bit version of MotionBuilder: <motionbuilder_install_path>/bin/x64/plugins/fbx
+
+Python:
+
+Python/fbxsdk lib 目录下是fbxsdk Python3.7的库
+
