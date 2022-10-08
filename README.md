@@ -1,6 +1,8 @@
 # AvgNormalTool-FBX-SDK
 Smooth Normal Tool，FBX SDK, Python，C++
 
+Model目录下为测试所用的FBX模型
+
 C++：
 
 c++/dll 目录下是编译好的dll文件，可以直接放到对应的dcc安装目录下
