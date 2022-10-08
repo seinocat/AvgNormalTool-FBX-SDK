@@ -5,7 +5,7 @@ C++：
 
 c++/dll 目录下是编译好的dll文件，可以直接放到对应的dcc安装目录下
 
-Maya:<maya_install_path>/bin/plug-ins/fbx \n
+Maya:<maya_install_path>/bin/plug-ins/fbx
 
 Max:<3dsMax_install_path>/stdplugs/fbx
 
