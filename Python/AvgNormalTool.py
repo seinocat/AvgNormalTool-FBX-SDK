@@ -5,7 +5,7 @@ import time
 
 # replace it with your fbx file path
 # path = "E:/Client/GrapicsLab/Clients/URPWater/URPWater/Assets/Prefab/Cube.fbx"
-path = "E:/CubeTest.fbx"
+path = "E:/MayaCube.fbx"
 
 def Start(path):
     fbxFile = FBXClass.FBX_Class(path)
@@ -19,5 +19,7 @@ def Start(path):
     # fbxFile.scene.SetName("")
     # rootNode:FbxNode =
     print(fbxFile.scene.GetName())
+
+    print(fbxFile.scene.GetNode(0).GetNode(0).GetName())
 
 Start(path)
