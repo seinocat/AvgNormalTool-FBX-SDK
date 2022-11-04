@@ -5,7 +5,7 @@ Model目录下为测试所用的FBX模型
 
 C++：
 
-c++/dll 目录下是编译好的dll文件，可以直接放到对应的dcc安装目录下
+c++/dll 目录下是编译好的dll文件，可以直接放到对应的dcc安装目录下，若没有FBX目录请自行创建
 
 Maya:<maya_install_path>/plug-ins/fbx/plug-ins/FBX
 
