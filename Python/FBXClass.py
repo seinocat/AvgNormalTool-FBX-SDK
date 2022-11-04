@@ -156,7 +156,7 @@ class FBX_Class(object):
             FbxCommon.SaveScene(self.sdk_manager, self.scene, self.filename)
         self.close()
 
-    def AvgMeshNormal(self):
+    def avg_mesh_normal(self):
 
         geoCount = self.scene.GetGeometryCount()
         for geoIndex in range(geoCount):
@@ -249,7 +249,7 @@ class FBX_Class(object):
 
 
 
-    def AddVertColor(self, node):
+    def add_vertex_color(self, node):
         #print("开始添加顶点色通道")
         if node.GetChildCount() > 0:
             for i in range(node.GetChildCount()):
