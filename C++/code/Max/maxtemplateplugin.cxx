@@ -134,7 +134,7 @@ void MaxExt_ExportEnd(FbxScene* pFbxScene, INode* pMaxRootNode)
 	//before the extension plugin is done with the export process. Any clean-up or last minute
 	//modification to the scene must be done now.
 
-    Fbx_SetName(pFbxScene, pMaxRootNode);
+    AvgNormal(pFbxScene);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

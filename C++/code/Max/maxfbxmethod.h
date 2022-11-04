@@ -5,9 +5,8 @@
 #include <max.h>
 
 
-void Fbx_SetName(FbxScene* pScene);
-
-void Fbx_SetName(FbxScene* pScene, INode* pMaxNode);
+void AvgNormal(FbxScene* pScene);
+void AddVertColor(FbxNode* node);
 
 
 
