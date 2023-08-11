@@ -1,5 +1,6 @@
 # AvgNormalTool-FBX-SDK
-Smooth Normal Tool，FBX SDK, Python，C++
+
+模型法线平滑工具，将平滑后的法线写入模型顶点色通道中
 
 Model目录下为测试所用的FBX模型
 
